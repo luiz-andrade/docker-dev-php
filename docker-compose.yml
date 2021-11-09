@@ -3,18 +3,17 @@ services:
   nginx:
     image: nginx:1.13
     volumes:
-      - "./app:/var/www/html"
+      - "./www:/var/www/html"
       - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
     ports:
       - "80:80"
     depends_on:
       - php
-
   php:
     build:
       context: ./php
     volumes:
-      - "./app:/var/www/html"
+      - "./www:/var/www/html"
     ports:
       - "9000:9000"
     depends_on:
@@ -28,17 +27,17 @@ services:
     image: mysql:5.7.20
     volumes:
       - "db_data:/var/lib/mysql"
-      - "./mysql/dados-iniciais:/docker-entrypoint-initdb.d"
+      - "./mysql/dados-iniciais:/docker-entrypoint-initdb.d/:ro"
+      - ./mysql/data:/var/lib/mysql
     ports:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=123.456
-
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8081:8080
+      - 8080:8080
 
 volumes:
   db_data:
