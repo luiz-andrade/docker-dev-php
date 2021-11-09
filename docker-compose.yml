@@ -1,6 +1,5 @@
 version: "3" 
 services:
-  # Web service layer
   nginx:
     image: nginx:1.13
     volumes:
