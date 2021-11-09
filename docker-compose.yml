@@ -27,15 +27,22 @@ services:
   
   # Data persistence service layer
   mysql:
-    image: mysql:5.7.20
-    platform: linux/x86_64
+  #versao container funciona no raspbery
+    image: hypriot/rpi-mysql:latest
+      #mysql:5.7.20
     volumes:
       - "db_data:/var/lib/mysql"
-      - "./mysql/initial_data:/docker-entrypoint-initdb.d"
+      # - "./mysql/initial_data:/docker-entrypoint-initdb.d"
     ports:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=123.456
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
 
 volumes:
   db_data:
