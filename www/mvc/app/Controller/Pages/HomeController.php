@@ -9,7 +9,7 @@ class HomeController extends PageController
 {
     /**
      * Metodo responsavel por retornar o conteudo da home
-     * @return string 
+     * @return string
      */
     public static function getHome(){
         //organizacao
