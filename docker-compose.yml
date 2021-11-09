@@ -27,12 +27,13 @@ services:
   
   # Data persistence service layer
   mysql:
-  #versao container funciona no raspbery
-    image: hypriot/rpi-mysql:latest
+  
+    image: mysql:5.7.20
+      #hypriot/rpi-mysql:latest ##versao container funciona no raspbery
       #mysql:5.7.20
     volumes:
       - "db_data:/var/lib/mysql"
-      # - "./mysql/initial_data:/docker-entrypoint-initdb.d"
+      - "./mysql/dados-iniciais:/docker-entrypoint-initdb.d"
     ports:
       - "3306:3306"
     environment:
