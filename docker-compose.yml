@@ -1,6 +1,5 @@
 version: "3" 
 services:
-  # Web service layer
   nginx:
     image: nginx:1.13
     volumes:
@@ -11,7 +10,6 @@ services:
     depends_on:
       - php
 
-  # Application service layer
   php:
     build:
       context: ./php
@@ -24,13 +22,10 @@ services:
     environment:
       - MYSQL_USER=root
       - MYSQL_PASS=123.456
-  
-  # Data persistence service layer
+
   mysql:
   
     image: mysql:5.7.20
-      #hypriot/rpi-mysql:latest ##versao container funciona no raspbery
-      #mysql:5.7.20
     volumes:
       - "db_data:/var/lib/mysql"
       - "./mysql/dados-iniciais:/docker-entrypoint-initdb.d"
