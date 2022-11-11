@@ -2,19 +2,25 @@ version: "3"
 services:
   nginx:
     image: nginx:1.13
+    restart: unless-stopped
     volumes:
-      - "./app:/var/www/html"
+      - "./www:/var/www/html"
       - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
+      # - "./nginx/blog.conf:/etc/nginx/conf.d/blog.conf"
+      # - "./nginx/blog:/etc/nginx/sites-available/blog"
     ports:
       - "80:80"
     depends_on:
       - php
-
+      - oracle
+    networks: 
+      - laravel-9
   php:
     build:
       context: ./php
     volumes:
-      - "./app:/var/www/html"
+      - "./www:/var/www/html"
+    restart: unless-stopped
     ports:
       - "9000:9000"
     depends_on:
@@ -22,23 +28,39 @@ services:
     environment:
       - MYSQL_USER=root
       - MYSQL_PASS=123.456
-
+      - PHP_MEMORY_LIMIT=256M
+    networks: 
+      - laravel-9
   mysql:
-  
     image: mysql:5.7.20
+    restart: unless-stopped
     volumes:
-      - "db_data:/var/lib/mysql"
-      - "./mysql/dados-iniciais:/docker-entrypoint-initdb.d"
+      #- "db_data:/var/lib/mysql"
+      #- "./mysql/dados-iniciais:/docker-entrypoint-initdb.d/:ro"
+      - ./mysql/data:/var/lib/mysql
     ports:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=123.456
-
+    networks: 
+      - laravel-9
+  oracle:
+    image: oracleinanutshell/oracle-xe-11g:latest
+    ports:
+      - 1522:1521
+      - 5502:5500
+    networks: 
+      - laravel-9  
   adminer:
     image: adminer
-    restart: always
+    restart: unless-stopped
     ports:
-      - 8081:8080
-
+      - 8080:8080
+    networks: 
+      - laravel-9
 volumes:
   db_data:
+
+networks: 
+  laravel-9:
+    driver: bridge
